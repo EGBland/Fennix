@@ -1,11 +1,11 @@
-OBJECTS = loader.o kmain.o io.o fb.o
+OBJECTS = loader.o kmain.o io.o fb.o gdt.o
 CC = gcc
-CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -save-temps
 LDFLAGS = -T link.ld -melf_i386
 AS = nasm
 ASFLAGS = -f elf32
 
-all: kernel.elf
+all: fennix.iso
 
 kernel.elf: $(OBJECTS)
 	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
@@ -23,11 +23,11 @@ fennix.iso: kernel.elf
 				-o fennix.iso \
 				iso
 
-%.o: %.c
+%.o: src/%.c
 	$(CC) $(CFLAGS) $< -o $@
 
-%.o: %.s
+%.o: src/%.s
 	$(AS) $(ASFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o *.i kernel.elf fennix.iso
+	rm -rf *.o *.i *.s kernel.elf fennix.iso
