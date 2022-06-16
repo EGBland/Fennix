@@ -22,8 +22,10 @@ void print(char *str) {
     int j = 0;
     while(*(str+j) != 0) {
         if(*(str+j) == '\n') {
-            current_pos /= 80;
             current_pos += 80;
+        }
+        else if(*(str+j) == '\r') {
+            current_pos /= 80;
         }
         else {
             fb_write(current_pos, *(str+j), 0, 7);

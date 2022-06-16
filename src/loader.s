@@ -8,25 +8,17 @@ KERNEL_STACK_SIZE equ 4096
 
 section .bss
 align 4
-extern clear
-extern print
 kernel_stack:
     resb KERNEL_STACK_SIZE
+extern kmain
 
-section .text:
-mov esp, kernel_stack + KERNEL_STACK_SIZE
+section .text
 align 4
     dd MAGIC_NUMBER
     dd FLAGS
     dd CHECKSUM
 
 loader:
-    call clear
-    push title
-    call print
-
-.loop:
-    jmp .loop
-
-section .data
-title db 'Fennix',0
+    mov esp, kernel_stack + KERNEL_STACK_SIZE
+    call kmain
+    jmp $
