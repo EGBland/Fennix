@@ -7,5 +7,8 @@
 #define LOG_LEVEL_DEBUG (1<<3)
 
 void log(unsigned char level, char *msg);
+void log_dword_dec(unsigned char level, unsigned int num);
+void log_dword_hex(unsigned char level, unsigned int num);
+void log_dword_bin(unsigned char level, unsigned int num);
 
 #endif

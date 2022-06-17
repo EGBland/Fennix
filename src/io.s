@@ -2,6 +2,7 @@ global outb
 global inb
 global asm_lgdt
 
+section .text
 outb:
     mov al, [esp+8]
     mov dx, [esp+4]

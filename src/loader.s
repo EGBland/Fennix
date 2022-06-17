@@ -1,4 +1,5 @@
 global loader
+global gdt
 
 MAGIC_NUMBER equ 0x1BADB002
 FLAGS        equ 0x0
@@ -11,6 +12,9 @@ align 4
 kernel_stack:
     resb KERNEL_STACK_SIZE
 extern kmain
+gdt:
+    resb 6 ; gdt
+    resq 3 ; segs; null, code, data
 
 section .text
 align 4
