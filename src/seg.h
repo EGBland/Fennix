@@ -1,5 +1,5 @@
-#ifndef __GDT_H_DEFINED
-#define __GDT_H_DEFINED 1
+#ifndef __SEG_H_DEFINED
+#define __SEG_H_DEFINED 1
 
 #include "io.h"
 

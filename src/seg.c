@@ -1,4 +1,4 @@
-#include "gdt.h"
+#include "seg.h"
 #include "io.h"
 
 void lgdt(struct GDT *gdt) {

@@ -21,4 +21,6 @@ align 4
 loader:
     mov esp, kernel_stack + KERNEL_STACK_SIZE
     call kmain
-    jmp $
+    done:
+        hlt
+        jmp done ; this seems to stop QEMU freaking out

@@ -5,9 +5,9 @@ char *fb = (char *) 0x000b8000;
 
 unsigned int current_pos = 0;
 
-void fb_write(unsigned int i, char c, unsigned char fg, unsigned char bg) {
+void fb_write(unsigned int i, char c, unsigned char colour) {
     fb[2*i] = c;
-    fb[2*i+1] = ((fg&0x0f) << 4) | (bg&0x0f);
+    fb[2*i+1] = colour;
 }
 
 void fb_set_cursor(unsigned short pos) {
@@ -18,7 +18,7 @@ void fb_set_cursor(unsigned short pos) {
 }
 
 
-void print(char *str) {
+void fb_print(char *str, unsigned char colour) {
     int j = 0;
     while(*(str+j) != 0) {
         if(*(str+j) == '\n') {
@@ -28,7 +28,7 @@ void print(char *str) {
             current_pos /= 80;
         }
         else {
-            fb_write(current_pos, *(str+j), 0, 7);
+            fb_write(current_pos, *(str+j), colour);
             current_pos++;
         }
         j++;
@@ -36,12 +36,12 @@ void print(char *str) {
     fb_set_cursor(current_pos);
 }
 
-void clear() {
+void fb_clear(unsigned char colour) {
     int x, y;
 
     for(y = 0; y < 25; y++) {
         for(x = 0; x < 80; x++) {
-            fb_write(80*y+x, ' ', 0, 7);
+            fb_write(80*y+x, ' ', colour);
         }
     }
 
