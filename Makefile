@@ -1,5 +1,5 @@
 PREFIX  = /usr/local/cross
-OBJECTS = kernel.o kmain.o vga.o io.o serial.o log.o
+OBJECTS = kernel.o kmain.o vga.o io.o serial.o log.o idt.o
 CC      = $(PREFIX)/bin/i686-elf-gcc
 CFLAGS  = -m32 -I./include -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -O0
 LD      = $(PREFIX)/bin/i686-elf-ld
