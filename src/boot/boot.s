@@ -6,7 +6,7 @@ section boot
 [bits 16]
 mov ax, 0x8fc0
 mov ss, ax
-mov bp, 0xffff
+mov bp, 0xfff0
 mov sp, bp
 
 ; tell user that we're loading the kernel
@@ -82,7 +82,7 @@ mov ss, ax
 mov es, ax
 mov fs, ax
 mov gs, ax
-mov ebp, 0x9ebff
+mov ebp, 0x9ebf0
 mov esp, ebp
 jmp SEG_CODE:0x100000
 

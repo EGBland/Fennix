@@ -1,7 +1,7 @@
 PREFIX  = /usr/local/cross
-OBJECTS = kernel.o kmain.o vga.o io.o serial.o log.o idt.o
+OBJECTS = kernel.o kmain.o vga.o io.o serial.o log.o idt.o interrupt.o asm_routines.o
 CC      = $(PREFIX)/bin/i686-elf-gcc
-CFLAGS  = -m32 -I./include -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -O0
+CFLAGS  = -m32 -I./include -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -Wno-unused-parameter -O0
 LD      = $(PREFIX)/bin/i686-elf-ld
 LDFLAGS = -Tlink.ld -melf_i386 -L$(PREFIX)/lib/gcc/i686-elf/13.0.0 -lgcc
 AS      = nasm
@@ -30,4 +30,4 @@ kernel.elf: $(OBJECTS)
 	$(AS) $< $(ASFLAGS) -o $@
 
 clean:
-	rm -rf *.o bin/*
+	rm -rf *.o bin/* *.i *.s

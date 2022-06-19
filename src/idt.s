@@ -1,4 +1,5 @@
 [global load_idt]
+[extern interrupt_handler]
 
 %macro interrupt_handler_no_code 1
 interrupt_handler_%1:
@@ -63,9 +64,27 @@ load_idt:
     ret
 
 interrupt_handler_asm:
-    mov [0xb8000], word 0x4141
+    ; preserve registers and flags
+    ; stack: ebp+52 | ebp+48 | ebp+44 | ebp+40 | ebp+36
+    ;        eflags | cs     | eip    | code   | int
+    pushad   ; ebp+32
+    push ebp ; ebp
+    mov ebp, esp
+
+    ; push the arguments for the handler in interrupt.h
+    push dword [ebp+52]
+    push dword [ebp+48]
+    push dword [ebp+44]
+    push dword [ebp+40]
+    push dword [ebp+36]
+    pushad
+    call interrupt_handler
+
+    ; time to leave
+    leave
+    popad
     add esp, 8
-    iret ; do nothing
+    iret
 
 interrupt_handler_no_code   0   ; divide error
 interrupt_handler_no_code   1   ; debug exception
