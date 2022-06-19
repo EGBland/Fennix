@@ -1,33 +1,33 @@
-OBJECTS = loader.o kmain.o io.o fb.o serial.o log.o seg.o
-CC = gcc
-CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -O0
-LDFLAGS = -T link.ld -melf_i386
-AS = nasm
+PREFIX  = /usr/local/cross
+OBJECTS = kernel.o kmain.o vga.o io.o serial.o
+CC      = $(PREFIX)/bin/i686-elf-gcc
+CFLAGS  = -m32 -I./include -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c -O0
+LD      = $(PREFIX)/bin/i686-elf-ld
+LDFLAGS = -Tlink.ld -melf_i386 -L$(PREFIX)/lib/gcc/i686-elf/13.0.0 -lgcc
+AS      = nasm
 ASFLAGS = -f elf
+OBJCOPY = $(PREFIX)/bin/i686-elf-objcopy
 
-all: kernel.elf
+all: bin/fennix.bin
+
+bin/fennix.bin: bin/boot.bin bin/kernel.bin
+	cat bin/boot.bin bin/kernel.bin > bin/fennix.bin
+
+bin/boot.bin: src/boot/boot.s
+	nasm src/boot/boot.s -f bin -o bin/boot.bin
+
+bin/kernel.bin: kernel.elf
+	$(OBJCOPY) -O binary kernel.elf bin/kernel.bin
+	rm -rf kernel.elf
 
 kernel.elf: $(OBJECTS)
-	ld $(LDFLAGS) $(OBJECTS) -o kernel.elf
-
-fennix.iso: kernel.elf
-	cp kernel.elf iso/boot/kernel.elf
-	genisoimage -R \
-				-b boot/grub/stage2_eltorito \
-				-no-emul-boot \
-				-boot-load-size 4 \
-				-A os \
-				-input-charset utf8 \
-				-quiet \
-				-boot-info-table \
-				-o fennix.iso \
-				iso
+	$(LD) $(OBJECTS) $(LDFLAGS) -o kernel.elf
 
 %.o: src/%.c
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: src/%.s
-	$(AS) $(ASFLAGS) $< -o $@
+	$(AS) $< $(ASFLAGS) -o $@
 
 clean:
-	rm -rf *.o *.i *.s kernel.elf fennix.iso
+	rm -rf *.o bin/*

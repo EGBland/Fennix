@@ -1,6 +1,5 @@
 global outb
 global inb
-global asm_lgdt
 
 section .text
 outb:
@@ -12,8 +11,4 @@ outb:
 inb:
     mov dx, [esp+4]
     in al, dx
-    ret
-
-asm_lgdt:
-    lgdt [esp+4]
     ret
