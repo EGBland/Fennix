@@ -73,15 +73,6 @@ print:
     print_done:
         ret
 
-msg_loading:
-    db "Fennix is loading... ",0
-msg_loaded:
-    db "Loaded. ",0
-msg_elevating:
-    db "Elevating to 32-bit...",0
-msg_disk_error:
-    db "Disk read error.",0
-
 ; we are now elevated
 [bits 32]
 elevate_done:
@@ -94,6 +85,16 @@ mov gs, ax
 mov ebp, 0x9ebff
 mov esp, ebp
 jmp SEG_CODE:0x100000
+
+[bits 16]
+msg_loading:
+    db "Fennix is loading... ",0
+msg_loaded:
+    db "Loaded. ",0
+msg_elevating:
+    db "Elevating to 32-bit...",0
+msg_disk_error:
+    db "Disk read error.",0
 
 times 510-($-$$) db 0
 dw 0xaa55
