@@ -18,6 +18,10 @@ void log(unsigned char level, char *msg) {
         case LOG_LEVEL_DEBUG:
             serial_print(SERIAL_PORT_COM1, "DEBUG\t");
             break;
+        case LOG_LEVEL_CONTINUE:
+        default:
+            serial_print(SERIAL_PORT_COM1, "\t");
+            break;
     }
     serial_print(SERIAL_PORT_COM1, msg);
     serial_print(SERIAL_PORT_COM1, "\r\n");

@@ -77,7 +77,7 @@ interrupt_handler_asm:
     push dword [ebp+44]
     push dword [ebp+40]
     push dword [ebp+36]
-    pushad
+    pushad              ; TODO get ebp,esp from before
     call interrupt_handler
 
     ; time to leave
