@@ -31,3 +31,15 @@ void vga_print(unsigned short offset, char *str) {
     }
     vga_set_cursor(offset+j);
 }
+
+void vga_print_trans(unsigned short offset, char *str) {
+    const unsigned char rainbow[] = { 13, 12, 14, 10, 11, 9 };
+    unsigned short j;
+    unsigned short *start = (unsigned short *)(VIDEO_MEMORY_BEGIN + 2*offset);
+    for(j = 0; *(str+j) != 0; j++) {
+        if(*(str+j) == '!') continue;
+        unsigned char colour = rainbow[(j/80)%6];
+        *(start+j) = (colour << 8) | *(str+j);
+    }
+    vga_set_cursor(offset+j);
+}
