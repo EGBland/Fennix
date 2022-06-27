@@ -1,3 +1,4 @@
 bin/
 *.o
-*.bin
+mem*.bin
+kernel.elf

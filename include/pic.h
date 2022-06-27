@@ -20,7 +20,7 @@
 #define ICW4_BUF_PIC2 0x0c
 #define ICW4_SFNM 0x10
 
-void pic_send_eoi(unsigned char irq);
+void pic_ack(unsigned char irq);
 void pic_remap(unsigned char offset1, unsigned char offset2);
 void pic_mask(unsigned char mask1, unsigned char mask2);
 

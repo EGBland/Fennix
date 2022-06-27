@@ -1,8 +1,8 @@
 #include <pic.h>
 #include <io.h>
 
-void pic_send_eoi(unsigned char irq) {
-    if(1/*irq >= 8*/) {
+void pic_ack(unsigned char irq) {
+    if(irq >= 8) {
         outb(PIC2_COMMAND, PIC_EOI);
     }
     outb(PIC1_COMMAND, PIC_EOI);
@@ -11,6 +11,30 @@ void pic_send_eoi(unsigned char irq) {
 void pic_mask(unsigned char mask1, unsigned char mask2) {
     outb(PIC1_DATA, mask1);
     outb(PIC2_DATA, mask2);
+}
+
+void pic_mask_set(unsigned char irq) {
+    irq &= 0x0f;
+    unsigned char pic_addr = 0x21;
+    if(irq > 0x07) {
+        // PIC 2
+        pic_addr += 0x80;
+        irq -= 8;
+    }
+    unsigned char mask = inb(pic_addr) | (1 << irq);
+    outb(pic_addr, mask);
+}
+
+void pic_mask_clear(unsigned char irq) {
+    irq &= 0x0f;
+    unsigned char pic_addr = 0x21;
+    if(irq > 0x07) {
+        // PIC 2
+        pic_addr += 0x80;
+        irq -= 8;
+    }
+    unsigned char mask = inb(pic_addr) & ~(1 << irq);
+    outb(pic_addr, mask);
 }
 
 void pic_remap(unsigned char offset1, unsigned char offset2) {

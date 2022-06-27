@@ -26,7 +26,7 @@ mov bx, 0xffff          ; segment 0xffff0
 mov es, bx              ;
 mov bx, 0x10            ; offset 0x10 (so start at 0x100000)
 mov cl, 3               ; first sector is 3
-mov al, 0x20            ; load 0x20=32 sectors
+mov al, 0x38            ; load 0x38=56 sectors (23 KB)
 call load
 
 ; tell the user that we've loaded the kernel

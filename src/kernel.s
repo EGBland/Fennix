@@ -4,7 +4,7 @@
 [extern load_idt]
 [extern kinit]
 [extern kmain]
-[extern halt]
+[extern stop]
 
 section .bss
 _heap:
@@ -24,9 +24,9 @@ _start:
     sti
     call print_splash
     call kmain
-    call halt
+    call stop
 
-; shouldn't get this far unless halt does something wacky
+; shouldn't get this far unless stop does something wacky
 done:
     hlt
     jmp done
