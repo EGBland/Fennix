@@ -21,5 +21,6 @@ struct ErrorState {
 };
 
 void interrupt_handler(struct CPUState cpu_state, struct ErrorState error_state);
+void set_handler(unsigned char irq, void (*handler)(struct CPUState, struct ErrorState));
 
 #endif

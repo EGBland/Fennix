@@ -1,5 +1,5 @@
 #include <pic.h>
-#include <io.h>
+#include <asm.h>
 
 void pic_ack(unsigned char irq) {
     if(irq >= 8) {

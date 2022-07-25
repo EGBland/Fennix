@@ -22,5 +22,6 @@ void vga_set_colour(unsigned char fg, unsigned char bg);
 void vga_set_cursor(unsigned short pos);
 void vga_clear();
 void vga_print(unsigned short offset, char *str);
+void vga_print_char(unsigned short offset, char c);
 
 #endif
