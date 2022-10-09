@@ -24,9 +24,9 @@ call load
 ; load kernel to 0x100000
 mov bx, 0xffff          ; segment 0xffff0
 mov es, bx              ;
-mov bx, 0x10            ; offset 0x10 (so start at 0x100000)
+mov bx, 0x10            ; offset 0x10 (so start at 0xffff0+0x10=0x100000)
 mov cl, 3               ; first sector is 3
-mov al, 0x38            ; load 0x38=56 sectors (23 KB)
+mov al, 0x40            ; load 0x40=64 sectors (32 KB)
 call load
 
 ; tell the user that we've loaded the kernel
@@ -46,7 +46,6 @@ jmp SEG_CODE:elevate_done
 load:
     push ax
     mov ah, 0x02
-    mov dl, 0       ; drive
     mov ch, 0       ; cylinder
     mov dh, 0       ; head
     int 0x13        ; do read

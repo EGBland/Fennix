@@ -1,8 +1,10 @@
 #include <log.h>
 #include <serial.h>
+#include <stdio.h>
 
 #define SWAP_PTR(x,y) { *(x) ^= *(y); *(y) ^= *(x); *(x) ^= *(y); }
 
+char log_line_buffer[80];
 
 void log(unsigned char level, char *msg) {
     switch(level) {
@@ -25,6 +27,35 @@ void log(unsigned char level, char *msg) {
     }
     serial_print(SERIAL_PORT_COM1, msg);
     serial_print(SERIAL_PORT_COM1, "\r\n");
+}
+
+int log_printf(unsigned char level, const char *format, ...) {
+    char *buf = log_line_buffer;
+    switch(level) {
+        case LOG_LEVEL_INFO:
+            buf += sprintf(buf, "INFO\t");
+            break;
+        case LOG_LEVEL_WARN:
+            buf += sprintf(buf, "WARN\t");
+            break;
+        case LOG_LEVEL_ERR:
+            buf += sprintf(buf, "ERROR\t");
+            break;
+        case LOG_LEVEL_DEBUG:
+            buf += sprintf(buf, "DEBUG\t");
+            break;
+        case LOG_LEVEL_CONTINUE:
+        default:
+            buf += sprintf(buf, "\t");
+            break;
+    }
+    int len = (int)(((unsigned int)buf) - ((unsigned int)log_line_buffer)); // these probably won't be more than 2^31-1 bytes apart :)
+    va_list lst;
+    va_start(lst, format);
+    len += _sprintf(buf, format, lst);
+    serial_print(SERIAL_PORT_COM1, log_line_buffer);
+    serial_print(SERIAL_PORT_COM1, "\r\n");
+    return len;
 }
 
 void log_dword_dec(unsigned char level, unsigned int num) {
