@@ -20,6 +20,10 @@ struct ErrorState {
     unsigned int eflags;
 };
 
+// "master" handler, calls the appropriate individual handler
 void interrupt_handler(struct CPUState cpu_state, struct ErrorState error_state);
+
+// set handler for irq
+void set_handler(unsigned char irq, void (*handler)(struct CPUState, struct ErrorState));
 
 #endif

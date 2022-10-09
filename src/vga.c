@@ -1,7 +1,5 @@
 #include <vga.h>
-#include <io.h>
-
-#define VIDEO_MEMORY_BEGIN 0xb8000
+#include <asm.h>
 
 unsigned char video_colour = (VGA_COLOUR_BLACK << 4) | VGA_COLOUR_LIGHT_GREY;
 
@@ -30,6 +28,12 @@ void vga_print(unsigned short offset, char *str) {
         *(start+j) = (video_colour << 8) | *(str+j);
     }
     vga_set_cursor(offset+j);
+}
+
+void vga_print_char(unsigned short offset, char c) {
+    unsigned short *start = (unsigned short *)(VIDEO_MEMORY_BEGIN + 2*offset);
+    *start = (video_colour << 8) | c;
+    vga_set_cursor(offset+1);
 }
 
 void vga_print_trans(unsigned short offset, char *str) {

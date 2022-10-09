@@ -1,8 +1,6 @@
 #include <heap.h>
-#include <asm_routines.h>
+#include <asm.h>
 #include <log.h>
-
-#define HEAP_MAX_SIZE 1048576
 
 #define HEAP_BLOCK_BEGIN(block) ((unsigned int)(block)+8)
 #define HEAP_BLOCK_END(block) (((unsigned int)(block)) + 8*((block)->size) + 8)
@@ -49,6 +47,14 @@ void *malloc(unsigned short len) {
         }
         return 0; // no space on the heap!
     }
+}
+
+void *calloc(unsigned short len) {
+    char *ptr = (char *)malloc(len);
+    for(int i = 0; i < len; i++) {
+        *(ptr+i) = 0;
+    }
+    return ptr;
 }
 
 void free(void *ptr) {

@@ -1,10 +1,9 @@
 #include <interrupt.h>
 #include <vga.h>
 #include <log.h>
-#include <asm_routines.h>
 #include <pic.h>
 #include <heap.h>
-#include <io.h>
+#include <asm.h>
 
 char *interrupt_names[] = {
     "DIVIDE ERROR",
@@ -28,15 +27,27 @@ char *interrupt_names[] = {
     "MACHINE CHECK",
     "SIMD FLOATING-POINT EXCEPTION",
     "VIRTUALISATION EXCEPTION",
-    "CONTROL PROTECTION EXCEPTION"
+    "CONTROL PROTECTION EXCEPTION",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
 };
+
+void (*interrupt_handlers[0x10])(struct CPUState, struct ErrorState);
 
 unsigned char fault_recover(struct CPUState cpu_state, struct ErrorState error_state) {
     return 0;
 }
 
 void interrupt_handler(struct CPUState cpu_state, struct ErrorState error_state) {
-    log_dword_hex(LOG_LEVEL_DEBUG, error_state.interrupt_number);
+    //log_dword_hex(LOG_LEVEL_DEBUG, error_state.interrupt_number);
     if(error_state.interrupt_number < 0x20) {
         // intel exception
         vga_clear();
@@ -48,7 +59,17 @@ void interrupt_handler(struct CPUState cpu_state, struct ErrorState error_state)
             stop();
         }
     }
-    else {
+    else if(error_state.interrupt_number < 0x30) {
+        unsigned char irq = error_state.interrupt_number - 0x20;
+        // PIC exception
+        if(*(interrupt_handlers+irq) != 0) {
+            (*(interrupt_handlers+irq))(cpu_state, error_state);
+        }
         pic_ack(error_state.interrupt_number-0x20);
     }
+}
+
+void set_handler(unsigned char irq, void (*handler)(struct CPUState, struct ErrorState)) {
+    if(irq > 0xf) return;
+    *(interrupt_handlers+irq) = handler;
 }
